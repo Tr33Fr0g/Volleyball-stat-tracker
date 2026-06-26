@@ -1,0 +1,25 @@
+A volleyball stat tracker command line interface
+
+A python command line interface software that is built for the main purpose of learning about github, uploading to the stardance challenge, and growth as a developer.
+
+
+Features
+-Dynamic Statistic Recorder: Records raw player stats and converts them with strong error handling features.
+-NCAA Linked Analytics System: Instantaneously calculates hitting percentage, Kill efficiency, per set averages and more.
+-Save/Load System: Saves the stat sheets to a json local folder for future loading/use.
+-Live API Integration: Using the Highlighty API for professional team lookups and standings1. Clone the repository:
+
+
+HOW TO RUN LOCALLY!!!
+    clone the repository
+bash
+git clone https://github.com/your-username/volleyball-tracker.git
+cd volleyball-tracker
+
+2. Create a `.env` file in the root directory and add your key from the HIGHLIGHTLY website:
+
+HIGHLIGHTLY_API_KEY=your_actual_key
+
+3. Run the application:
+bash
+python tracker.py
