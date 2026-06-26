@@ -56,7 +56,7 @@ def format_stat(value):
         """Formats a stat so its simple for the viewer to read"""
         if value is None:
             return "N/A"
-        return f"value:.3f"
+        return f"{value:.3f}"
 
 def view_analytics(players):
     """Display analytics for a player that was selected"""
@@ -102,6 +102,59 @@ def view_analytics(players):
     print(f"Blocks/Set: {format_stat(analytics['aces_per_set'])}")
     print(f"Hitter Rating: {get_performance_rating(analytics['hitting_pct'])}")
     print(f"{'='*40}\n")
+
+
+def save_stats(players):
+    """Save all of the player stats to a JSON file."""
+    if not players:
+        print("No players to save.\n")
+        return
+
+    os.makedirs(STATS_DIR, exist_ok=True)
+
+    default_name = f"match_{len(os.listdir(STATS_DIR)) + 1}"
+    filename = input(f"Enter filename (default: {default_name}) ").strip()
+    if not filename:
+        filename = default_name
+    if not filename.endswith(".json"):
+        filename += ".json"
+
+    filepath = os.path.join(STATS_DIR, filename)
+    with open(filepath, "w") as f:
+        json.dump(players, f, indent=2)
+    
+    print(f"Stats saved to {filepath}\n")
+
+
+def load_stats():
+    """Loads the players stats from a previously saved JSON file."""
+    if not os.path.exists(STATS_DIR):
+        print("No saved stat sheets found. \n")
+        return None
+    
+    files = [f for f in os.listdir(STATS_DIR) if f.endswith(".json")]
+    if not files:
+        print("No saved stat sheets found. \n")
+    
+    print("Saved stat sheets:")
+    for i, f in enumerate(files, 1):
+        print(f"  {i}. {f}")
+    try:
+        choice = int(input("Select a file number: ")) - 1
+        if choice < 0 or choice >= len(files):
+            return None
+    except ValueError:
+        print("Invalid selection. \n")
+        return None
+    
+
+    filepath = os.path.join(STATS_DIR, files[choice])
+    with open(filepath, "r") as f:
+        players = json.load(f)
+
+
+    print(f"Loaded {len(players)} player(s) from {files[choice]} \n")
+    return players
 
 
 def record_player(players):
@@ -153,6 +206,14 @@ def main():
         
         elif choice == "2":
             view_analytics(players)
+        
+        elif choice == "3":
+            save_stats(players)
+        
+        elif choice == "4":
+            loaded = load_stats()
+            if loaded is not None:
+                players = loaded
         
         elif choice == "6":
             print("Goodbye!")
