@@ -156,6 +156,104 @@ def load_stats():
     return players
 
 
+def load_player_from_file(name):
+    """Try to load a specific player from the saved stat sheets"""
+    if not os.path.exists(STATS_DIR):
+        return None
+
+
+    files = [f for f in os.listdir(STATS_DIR) if f.endswith(".json")]
+    for filename in files:
+        filepath = os.path.join(STATS_DIR, filename)
+        with open(filepath, "r") as f:
+            data = json.load(f)
+        if name in data:
+            print(f"  Found {name}- in {filename}")
+            return data[name]
+    return None
+
+
+def compare_players(players):
+    """compares the two players side by side"""
+    print("Enter the names of the two players to compare.")
+    print("Players can be from the current session or from saved files. \n")
+
+    compared = {}
+
+    for label in ["first", "second"]:
+        name = input(f"Enter {label} player name: ")
+        if not name:
+            print("Player name cannot be empty.\n")
+            return
+        
+        if name in players:
+            compared[name] = players[name]
+        else:
+            print(f"{name} is not in the current session, searching saved files...")
+            
+            loaded = load_player_from_file(name)
+            if loaded:
+                compared[name] = loaded
+            else:
+                print(f"  Coudl not find {name} anywhere.\n")
+                return
+    names = list(compared.keys())
+    stats_a = compared[names[0]]
+    stats_b = compared[names[1]]
+    analytics_a = calculate_analytics(stats_a)
+    analytics_b = calculate_analytics(stats_b)
+
+
+    name_a = names[0]
+    name_b = names[1]
+
+    print(f"\n{'='*60}")
+    print(f"  {name_a}  vs  {name_b}")
+    print(f"{'='*60}")
+
+
+    #Display raw stats with arrows
+    raw_categories = ["kills", "errors", "attempts", "aces", "digs", "blocks", "sets_played"]
+    for cat in raw_categories:
+        val_a = stats_a[cat]
+        val_b = stats_b[cat]
+        if cat == "errors":
+            # less errors is better
+            arrow = " <-- " if val_a < val_b else (" --> " if val_b < val_a else "  =  ")
+        else:
+            #for everything but errors higher is better
+            arrow = " <-- " if val_a > val_b else (" --> " if val_b > val_a else "  =  ")
+        print(f"  {cat:<18} {val_a:>6}{arrow}{val_b:<6}")
+
+    print(f"{'-'*60}")
+
+    #display the calculated analytics     
+    analytics_categories = [("hitting_pct", "Hitting %"), 
+                            ("kill_efficiency", "Kill Efficiency"),
+                            ("aces_per_set", "Aces/Set"), 
+                            ("digs_per_set", "Digs/Set"), 
+                            ("blocks_per_set", "Blocks/Set")]
+
+    for key, label in analytics_categories:
+        val_a = analytics_a[key]
+        val_b = analytics_b[key]
+        str_a = format_stat(val_a)
+        str_b = format_stat(val_b)
+
+        if val_a is not None and val_b is not None:
+            arrow = " <-- " if val_a > val_b else (" --> " if val_b > val_a else "  =  ")
+        else:
+            arrow = "  ?  "
+        print(f"  {label:<18} {str_a:>6}{arrow}{str_b:<6}")
+
+    rating_a = get_performance_rating(analytics_a["hitting_pct"])
+    rating_b = get_performance_rating(analytics_b["hitting_pct"])
+    print(f"{'-'*60}")
+    print(f"  {'Rating':<18} {rating_a:>6}   {rating_b:<6}")
+    print(f"{'='*60}")
+    print(f"  <-- = {name_a} leads  :  --> = {name_b} leads")
+    
+
 def lookup_team(api_key):
     """Search for a volleyball team using the Highlightly API"""
     team_name = input("Enter team name to search: ").strip()
@@ -264,12 +362,23 @@ def record_player(players):
                 if value < 0:
                     print("  Value must be positive or 0.")
                     continue
+
+
+                if category == "attempts":
+                    combined_attacks = stats["kills"] + stats["errors"]
+                    if value < combined_attacks:
+                        print(f"  Attempts must be equal to or greater greater than combined attacks")
+                        continue
+
                 if category == "sets_played" and value < 1:
+                    print("  Sets played must be atleast 1")
                     continue
+
+
                 stats[category] = value
                 break
             except ValueError:
-                print("  Please enter a whole number.")
+                    print("  Please enter a whole number.")
     players[name] = stats
     print(f"Stats recorded for {name}. \n")
 
@@ -292,7 +401,8 @@ def main():
         print("3. Save stats")
         print("4. Load stats")
         print("5. Look up pro team")
-        print("6. Exit")
+        print("6. Compare two player stats")
+        print("7. Exit")
 
         choice = input("\nSelect an option: ").strip()
 
@@ -317,6 +427,10 @@ def main():
                 print("No API key found. Add HIGHLIGHTLY_API_KEY to your .env file.\n")
 
         elif choice == "6":
+            compare_players(players)
+
+
+        elif choice == "7":
             print("Goodbye!")
             break
         else:
