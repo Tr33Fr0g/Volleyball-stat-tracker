@@ -24,3 +24,7 @@ HIGHLIGHTLY_API_KEY=your_actual_key
 3. Run the application:
 bash
 python tracker.py
+
+FOR LOADING DEMO FOR STARDANCE IN GITHUB CODESPACES
+##RUN THIS COMMAND IN TERMINAL:
+python3 tracker.py
