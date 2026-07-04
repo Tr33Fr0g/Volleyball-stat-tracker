@@ -1,0 +1,10 @@
+.env
+stats/
+
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+
+DO NOT SHIP/

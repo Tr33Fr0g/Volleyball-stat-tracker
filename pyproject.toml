@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volleyball-tracker"
+version = "0.1.0"
+description = "A menu-driven CLI for recording volleyball stats, calculating analytics, and looking up pro team/standings data via the Highlightly API"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Bryan Ezumah" }]
+dependencies = [
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+volleyball-tracker = "tracker:main"
+
+[tool.setuptools]
+py-modules = ["tracker"]

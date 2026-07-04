@@ -1,22 +1,16 @@
 import json
 import os
 import requests
+from dotenv import load_dotenv
 
 
 STATS_DIR = "stats"
 
 
 def load_api_key():
-    """Read the Highlightly API key from the .env file."""
-    env_path = os.path.join(os.path.dirname(__file__), ".env")
-    if not os.path.exists(env_path):
-        return None
-    with open(env_path, "r") as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith("HIGHLIGHTLY_API_KEY="):
-                return line.split("=", 1)[1]
-    return None
+    """Read the Highlightly API key from the environment."""
+    load_dotenv()
+    return os.environ.get("HIGHLIGHTLY_API_KEY")
 
 def calculate_analytics(player_stats):
     """Calculate volleyball analytics from statistics"""
