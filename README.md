@@ -10,6 +10,9 @@ A python command line interface software that is built for the main purpose of l
 - **API Integration:** Uses the Highlightly API for professional team lookups and standings.
 - **Comparison function:** Compares two players either on the current session or saved in JSONs head to head based on statistics.
 
+#Run with codespaces
+https://codespaces.new/Tr33Fr0g/Volleyball-stat-tracker
+
 ## Install with pipx (recommended)
 
 ```bash
