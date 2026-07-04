@@ -1,5 +1,5 @@
 A volleyball stat tracker command line interface
-
+AI USED IN THE PUBLISHING OF THIS GITHUB README (accident) AND THE PIPX PACKAGING.
 A python command line interface software that is built for the main purpose of learning about github, uploading to the stardance challenge, and growth as a developer.
 
 ## Features
