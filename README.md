@@ -1,5 +1,5 @@
 A volleyball stat tracker command line interface
-
+AI USED IN THE PUBLISHING OF THIS GITHUB README (accident) AND THE PIPX PACKAGING.
 A python command line interface software that is built for the main purpose of learning about github, uploading to the stardance challenge, and growth as a developer.
 
 ## Features
@@ -9,6 +9,9 @@ A python command line interface software that is built for the main purpose of l
 - **Save/Load System:** Saves the stat sheets to a json local folder for future loading/use.
 - **API Integration:** Uses the Highlightly API for professional team lookups and standings.
 - **Comparison function:** Compares two players either on the current session or saved in JSONs head to head based on statistics.
+
+#Run with codespaces
+https://codespaces.new/Tr33Fr0g/Volleyball-stat-tracker
 
 ## Install with pipx (recommended)
 
